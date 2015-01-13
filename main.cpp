@@ -5,6 +5,7 @@
 #include <GL/glu.h>
 
 void drawTriangle();
+void drawCube();
 
 
 int main()
@@ -44,7 +45,7 @@ int main()
                    );
     glMatrixMode(GL_MODELVIEW);
     gluLookAt(2,2,2,0,0,0,0,1,0);
-
+    glEnable(GL_DEPTH_TEST);
     bool quit=false;
     SDL_Event event;
     while(!quit)
@@ -54,10 +55,19 @@ int main()
             switch( event.type)
             {
                 case SDL_QUIT : quit = true; break;
+                case SDL_KEYDOWN :
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_ESCAPE : quit = true; break;
+                        case SDLK_w : glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); break;
+                        case SDLK_s : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); break;
+                    }
+
             }
         }
-        glClear(GL_COLOR_BUFFER_BIT);
-        drawTriangle();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //drawTriangle();
+        drawCube();
         SDL_GL_SwapWindow(window);
     }
 
@@ -70,12 +80,53 @@ void drawTriangle()
     glPushMatrix();
         glRotated(++rot, 0,1,0);
         glBegin(GL_TRIANGLES);
-         glColor3f(1.0f,0.0f,0.0f);
-         glVertex3f(0.0f,1.0f,0.0f);
-         glColor3f(0.0f,1.0f,0.0f);
-         glVertex3f(1.0f,-1.0f,0.0f);
-         glColor3f(0.0f,0.0f,1.0f);
-         glVertex3f(-1.0f,-1.0f,0.0f);
+            glColor3f(1.0f,0.0f,0.0f);
+            glVertex3f(0.0f,1.0f,0.0f);
+            glColor3f(0.0f,1.0f,0.0f);
+            glVertex3f(1.0f,-1.0f,0.0f);
+            glColor3f(0.0f,0.0f,1.0f);
+            glVertex3f(-1.0f,-1.0f,0.0f);
+        glEnd();
+    glPopMatrix();
+}
+
+void drawCube()
+{
+static int rot = 0;
+    glPushMatrix();
+        glRotated(++rot, 1,0,0);
+        glBegin(GL_QUADS);
+            glColor3f(1.0f,0.0f,0.0f);
+            glVertex3f(-1.0f,-1.0f,1.0f);
+            glVertex3f(-1.0f,1.0f,1.0f);
+            glVertex3f(1.0f,1.0f,1.0f);
+            glVertex3f(1.0f,-1.0f,1.0f);
+            glColor3f(0.0f,1.0f,0.0f);
+            glVertex3f(1.0f,1.0f,1.0f);
+            glVertex3f(1.0f,1.0f,-1.0f);
+            glVertex3f(1.0f,-1.0f,-1.0f);
+            glVertex3f(1.0f,-1.0f,1.0f);
+            glColor3f(0.0f,0.0f,1.0f);
+            glVertex3f(1.0f,1.0f,-1.0f);
+            glVertex3f(1.0f,-1.0f,-1.0f);
+            glVertex3f(-1.0f,-1.0f,-1.0f);
+            glVertex3f(-1.0f,1.0f,-1.0f);
+            glColor3f(1.0f,1.0f,0.0f);
+            glVertex3f(-1.0f,1.0f,-1.0f);
+            glVertex3f(-1.0f,-1.0f,-1.0f);
+            glVertex3f(-1.0f,-1.0f,1.0f);
+            glVertex3f(-1.0f,1.0f,1.0f);
+            glColor3f(0.7f,0.0f,1.0f);
+            glVertex3f(-1.0f,1.0f,1.0f);
+            glVertex3f(-1.0f,1.0f,-1.0f);
+            glVertex3f(1.0f,1.0f,-1.0f);
+            glVertex3f(1.0f,1.0f,1.0f);
+            glColor3f(0.9f,1.0f,0.7f);
+            glVertex3f(-1.0f,-1.0f,1.0f);
+            glVertex3f(-1.0f,-1.0f,-1.0f);
+            glVertex3f(1.0f,-1.0f,-1.0f);
+            glVertex3f(1.0f,-1.0f,1.0f);
+
         glEnd();
     glPopMatrix();
 }
